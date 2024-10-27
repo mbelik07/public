@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secret Santa Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .participant-list {
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Secret Santa Generator</h1>
+    
+    <div class="input-section">
+        <input type="text" id="participantName" placeholder="Enter participant name">
+        <button onclick="addParticipant()">Add Participant</button>
+    </div>
+
+    <div class="participant-list">
+        <h2>Participants:</h2>
+        <ul id="participants"></ul>
+    </div>
+
+    <button onclick="generatePairs()">Generate Secret Santa Pairs!</button>
+
+    <div id="results" class="result"></div>
+
+    <script>
+        let participants = [];
+
+        function addParticipant() {
+            const name = document.getElementById('participantName').value.trim();
+            if (name) {
+                participants.push(name);
+                updateParticipantList();
+                document.getElementById('participantName').value = '';
+            }
+        }
+
+        function updateParticipantList() {
+            const list = document.getElementById('participants');
+            list.innerHTML = '';
+            participants.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                list.appendChild(li);
+            });
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generatePairs() {
+            if (participants.length < 2) {
+                alert('Need at least 2 participants!');
+                return;
+            }
+
+            const shuffled = shuffle([...participants]);
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Secret Santa Assignments:</h2>';
+
+            for (let i = 0; i < shuffled.length; i++) {
+                const giver = shuffled[i];
+                const receiver = shuffled[(i + 1) % shuffled.length];
+                results.innerHTML += `<p>${giver} → ${receiver}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
